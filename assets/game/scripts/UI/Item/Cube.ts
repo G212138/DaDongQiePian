@@ -1,6 +1,9 @@
+import { NetWork } from "../../../../frame/scripts/Http/NetWork";
 import { ListenerManager } from "../../../../frame/scripts/Manager/ListenerManager";
+import { SoundManager } from "../../../../frame/scripts/Manager/SoundManager";
 import { SyncDataManager } from "../../../../frame/scripts/Manager/SyncDataManager";
 import { EventType } from "../../Data/EventType";
+import { SoundConfig } from "./SoundConfig";
 
 
 const { ccclass, property } = cc._decorator;
@@ -46,7 +49,7 @@ export default class Cube extends cc.Component {
 
     private clickCube(clckName: string) {
         let enableClick = false;
-        let data = {xIndex: null, yIndex: null, zIndex: null}
+        let data = { xIndex: null, yIndex: null, zIndex: null }
         switch (clckName) {
             case "up":
                 enableClick = this.yIndex == 5;
@@ -82,23 +85,35 @@ export default class Cube extends cc.Component {
                 break;
         }
         SyncDataManager.getSyncData().customSyncData.cubeClickArr.push(data);
-        ListenerManager.dispatch(EventType.CLICK_CUBE, data);        
+        ListenerManager.dispatch(EventType.CLICK_CUBE, data);
     }
 
-    public handleCubeClick(data: {xIndex: number, yIndex: number, zIndex: number}) {
+    public handleCubeClick(data: { xIndex: number, yIndex: number, zIndex: number }, isClick:boolean = true) {
         if (data.xIndex == null && data.yIndex == this.yIndex && data.zIndex == this.zIndex) {
+            if (isClick) {
+                SoundManager.stopSoundByName(SoundConfig.soudlist["打孔音效"]);
+                SoundManager.playEffect(SoundConfig.soudlist["打孔音效"], false, false);
+            }            
             this.isHide = true;
             this.node.active = false;
         } else if (data.yIndex == null && data.xIndex == this.xIndex && data.zIndex == this.zIndex) {
+            if (isClick) {
+                SoundManager.stopSoundByName(SoundConfig.soudlist["打孔音效"]);
+                SoundManager.playEffect(SoundConfig.soudlist["打孔音效"], false, false);
+            }
             this.isHide = true;
             this.node.active = false;
         } else if (data.zIndex == null && data.xIndex == this.xIndex && data.yIndex == this.yIndex) {
+            if (isClick) {
+                SoundManager.stopSoundByName(SoundConfig.soudlist["打孔音效"]);
+                SoundManager.playEffect(SoundConfig.soudlist["打孔音效"], false, false);
+            }
             this.isHide = true;
             this.node.active = false;
         }
     }
 
-    public handleOpen(pos: {x: number, y: number, z: number}) {
+    public handleOpen(pos: { x: number, y: number, z: number }) {
         this.node.setPosition(pos.x, pos.y, pos.z);
     }
 
@@ -122,7 +137,7 @@ export default class Cube extends cc.Component {
             let color = new cc.Color().fromHEX("#2DB97A");
             material.setProperty("diffuseColor", color, 0)
         }
-        if(this.yIndex == 0) {
+        if (this.yIndex == 0) {
             let material = this.downFace.getComponent(cc.MeshRenderer).getMaterial(0);
             let color = new cc.Color().fromHEX("#2DB97A");
             material.setProperty("diffuseColor", color, 0)
@@ -136,7 +151,7 @@ export default class Cube extends cc.Component {
             let material = this.backFace.getComponent(cc.MeshRenderer).getMaterial(0);
             let color = new cc.Color().fromHEX("#2DB97A");
             material.setProperty("diffuseColor", color, 0)
-        } 
+        }
         if (this.zIndex == SyncDataManager.getSyncData().customSyncData.zCount - 1) {
             let material = this.frontFace.getComponent(cc.MeshRenderer).getMaterial(0);
             let color = new cc.Color().fromHEX("#2DB97A");
@@ -144,5 +159,5 @@ export default class Cube extends cc.Component {
         }
     }
 
-    
+
 }

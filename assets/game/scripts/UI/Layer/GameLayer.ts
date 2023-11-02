@@ -1,5 +1,7 @@
+import { NetWork } from "../../../../frame/scripts/Http/NetWork";
 import { ListenerManager } from "../../../../frame/scripts/Manager/ListenerManager";
 import { SyncDataManager } from "../../../../frame/scripts/Manager/SyncDataManager";
+import { T2M } from "../../../../frame/scripts/SDK/T2M";
 import { EventType } from "../../Data/EventType";
 import Cube from "../Item/Cube";
 import GameUI from "../Item/GameUI";
@@ -27,14 +29,18 @@ export default class GameLayer extends cc.Component {
 
     onLoad() {
         ListenerManager.on(EventType.ENTER_GAME, this.handleEnterGame, this);
+        ListenerManager.on(EventType.GAME_RECONNECT, this.handleEnterGame, this);
 
+        T2M.addSyncEventListener(EventType.DRAG_END, this.handleDragEnd.bind(this));
         // this.node.on(cc.Node.EventType.TOUCH_START, this.onTouchStart, this)
         // this.node.on(cc.Node.EventType.TOUCH_MOVE, this.onTouchMove, this)
         // this.node.on(cc.Node.EventType.TOUCH_END, this.onTouchEnd, this)
     }
     onDestroy() {
         ListenerManager.off(EventType.ENTER_GAME, this.handleEnterGame, this);
+        ListenerManager.off(EventType.GAME_RECONNECT, this.handleEnterGame, this);
 
+        T2M.removeSyncEventListener(EventType.DRAG_END);
         // this.node.off(cc.Node.EventType.TOUCH_START, this.onTouchStart, this)
         // this.node.off(cc.Node.EventType.TOUCH_MOVE, this.onTouchMove, this)
         // this.node.off(cc.Node.EventType.TOUCH_END, this.onTouchEnd, this)
@@ -43,6 +49,13 @@ export default class GameLayer extends cc.Component {
     private handleEnterGame() {
         this.threeDNode.init();
         this.gameUI.init();
+
+        let eulerX = SyncDataManager.getSyncData().customSyncData.eulerX;
+        let eulerY = SyncDataManager.getSyncData().customSyncData.eulerY;
+        let eulerZ = SyncDataManager.getSyncData().customSyncData.eulerZ;
+        let rotation = cc.quat();
+        cc.Quat.fromEuler(rotation, eulerX, eulerY, eulerZ);
+        this.cubeRootNode.setRotation(rotation);
     }
 
     private onDragStart(data) {
@@ -96,88 +109,38 @@ export default class GameLayer extends cc.Component {
         if (data.isClick && SyncDataManager.getSyncData().customSyncData.enableClick) {
             let pos = data.target.parent.convertToWorldSpaceAR(cc.v2(data.pos.x, data.pos.y));
             let location = cc.v2(pos.x, pos.y);
-            let ray = cc.Camera.main.getRay(location);
+            let ray = this.threeDCamera.getComponent(cc.Camera).getRay(location);
             let results = cc.geomUtils.intersect.raycast(this.cubeRootNode, ray, null, null);
             for (let i = 0; i < results.length; i++) {
-                if (results[0].node.parent.getComponent(Cube)) {
+                if (results[0].node.parent.getComponent(Cube) && results[1]) {
                     results[0].node.parent.getComponent(Cube).clickCube(results[1].node.name);
                 }
                 return;
             }
+        }
+
+        if (NetWork.isMaster || !NetWork.isSync) {
+            let data = {
+                eulerX: SyncDataManager.getSyncData().customSyncData.eulerX,
+                eulerY: SyncDataManager.getSyncData().customSyncData.eulerY,
+                eulerZ: SyncDataManager.getSyncData().customSyncData.eulerZ
+            }
+            T2M.dispatch(EventType.DRAG_END, data);
         }
     }
 
     private onChangeBigCubeEuler(eulerX: number, eulerY: number, eulerZ: number) {
         let rotation = cc.quat();
         cc.Quat.fromEuler(rotation, eulerX, eulerY, eulerZ);
+        SyncDataManager.getSyncData().customSyncData.eulerX = eulerX;
+        SyncDataManager.getSyncData().customSyncData.eulerY = eulerY;
+        SyncDataManager.getSyncData().customSyncData.eulerZ = eulerZ;
         this.cubeRootNode.setRotation(rotation);
     }
 
-    // private isAllowTouch: boolean = false;
-    // private onTouchStart(event: cc.Event.EventTouch) {
-    //     this.isAllowTouch = true;
-    //     let eventID = event.getID();
-    //     if (this.touchEventId != null) {
-    //         return
-    //     }
-    //     this.touchEventId = eventID;
-    // }
-
-    // private onTouchMove(event: cc.Event.EventTouch) {
-    //     let eventID = event.getID();
-    //     if (this.touchEventId != null && eventID == this.touchEventId) {
-    //         //（滑的距离/1000）*180=旋转的角度
-    //         let prevLocation = event.getPreviousLocation()
-    //         let curLocation = event.getLocation()
-    //         let vel = curLocation.sub(prevLocation);
-    //         let disX = vel.x;
-    //         let disY = vel.y;
-
-    //         let eulerX = this.cubeRootNode.eulerAngles.x;
-    //         let eulerY = this.cubeRootNode.eulerAngles.y;
-    //         let eulerZ = this.cubeRootNode.eulerAngles.z;
-    //         let quat = new cc.Quat()
-    //         cc.Quat.fromEuler(quat, eulerX, eulerY, eulerZ)
-    //         let changed = false
-    //         if (Math.abs(disX) > 0.1) {
-    //             let angle = (disX / 2436 * 180);
-    //             cc.Quat.rotateAround(quat, quat, cc.Vec3.UP, cc.misc.degreesToRadians(angle))
-    //             changed = true
-    //         }
-    //         if (Math.abs(disY) > 0.1) {
-    //             let angle = -(disY / 2436 * 180);
-    //             cc.Quat.rotateAround(quat, quat, this.threeDCamera.right, cc.misc.degreesToRadians(angle))
-    //             changed = true
-    //         }
-    //         if (changed) {
-    //             this.isAllowTouch = false;
-    //             let outEuler = cc.v3()
-    //             quat.toEuler(outEuler)
-    //             this.onChangeBigCubeEuler(outEuler.x, outEuler.y, outEuler.z)
-    //         }
-    //     }
-    // }
-
-
-
-    // private onTouchEnd(event: cc.Event.EventTouch) {
-    //     let eventID = event.getID();
-    //     if (this.touchEventId != null && eventID == this.touchEventId) {
-    //         this.touchEventId = null
-
-    //         if (this.isAllowTouch) {
-    //             let location = event.getLocation();
-    //             let ray = cc.Camera.main.getRay(location);
-    //             let results = cc.geomUtils.intersect.raycast(this.cubeRootNode, ray, null, null);
-    //             for (let i = 0; i < results.length; i++) {
-    //                 if (results[0].node.parent.getComponent(Cube)) {
-    //                     results[0].node.parent.getComponent(Cube).clickCube(results[0].node.name);
-    //                 }
-    //                 return;
-    //             }
-    //         }
-    //     }
-    //     this.isAllowTouch = true;
-    // }
-
+    private handleDragEnd(data: any) {
+        let rotation = cc.quat();
+        cc.Quat.fromEuler(rotation, data.eulerX, data.eulerY, data.eulerZ);
+        this.cubeRootNode.setRotation(rotation);
+    }
 }

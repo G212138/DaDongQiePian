@@ -46,9 +46,15 @@ var ThreeNode = /** @class */ (function (_super) {
     };
     ThreeNode.prototype.init = function () {
         this.initBigCube();
+        this.onCubeOpen(SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.cubeOpened);
+        for (var i = 0; i < SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.cubeClickArr.length; i++) {
+            this.onClickCube(SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.cubeClickArr[i]);
+        }
     };
     ThreeNode.prototype.reset = function () {
-        this.cubeRootNode.setRotation(cc.quat());
+        var quat = new cc.Quat();
+        cc.Quat.fromEuler(quat, 0, 45, 0);
+        this.cubeRootNode.setRotation(quat);
         this.initBigCube();
         SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.cubeClickArr = [];
         SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.cubeOpened = false;

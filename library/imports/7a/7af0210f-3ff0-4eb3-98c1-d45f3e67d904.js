@@ -23,8 +23,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var NetWork_1 = require("../../../../frame/scripts/Http/NetWork");
 var ListenerManager_1 = require("../../../../frame/scripts/Manager/ListenerManager");
 var SyncDataManager_1 = require("../../../../frame/scripts/Manager/SyncDataManager");
+var T2M_1 = require("../../../../frame/scripts/SDK/T2M");
 var EventType_1 = require("../../Data/EventType");
 var Cube_1 = require("../Item/Cube");
 var GameUI_1 = require("../Item/GameUI");
@@ -41,75 +43,19 @@ var GameLayer = /** @class */ (function (_super) {
         _this.addMinus = null;
         _this.img_huangbian = [];
         return _this;
-        // private isAllowTouch: boolean = false;
-        // private onTouchStart(event: cc.Event.EventTouch) {
-        //     this.isAllowTouch = true;
-        //     let eventID = event.getID();
-        //     if (this.touchEventId != null) {
-        //         return
-        //     }
-        //     this.touchEventId = eventID;
-        // }
-        // private onTouchMove(event: cc.Event.EventTouch) {
-        //     let eventID = event.getID();
-        //     if (this.touchEventId != null && eventID == this.touchEventId) {
-        //         //（滑的距离/1000）*180=旋转的角度
-        //         let prevLocation = event.getPreviousLocation()
-        //         let curLocation = event.getLocation()
-        //         let vel = curLocation.sub(prevLocation);
-        //         let disX = vel.x;
-        //         let disY = vel.y;
-        //         let eulerX = this.cubeRootNode.eulerAngles.x;
-        //         let eulerY = this.cubeRootNode.eulerAngles.y;
-        //         let eulerZ = this.cubeRootNode.eulerAngles.z;
-        //         let quat = new cc.Quat()
-        //         cc.Quat.fromEuler(quat, eulerX, eulerY, eulerZ)
-        //         let changed = false
-        //         if (Math.abs(disX) > 0.1) {
-        //             let angle = (disX / 2436 * 180);
-        //             cc.Quat.rotateAround(quat, quat, cc.Vec3.UP, cc.misc.degreesToRadians(angle))
-        //             changed = true
-        //         }
-        //         if (Math.abs(disY) > 0.1) {
-        //             let angle = -(disY / 2436 * 180);
-        //             cc.Quat.rotateAround(quat, quat, this.threeDCamera.right, cc.misc.degreesToRadians(angle))
-        //             changed = true
-        //         }
-        //         if (changed) {
-        //             this.isAllowTouch = false;
-        //             let outEuler = cc.v3()
-        //             quat.toEuler(outEuler)
-        //             this.onChangeBigCubeEuler(outEuler.x, outEuler.y, outEuler.z)
-        //         }
-        //     }
-        // }
-        // private onTouchEnd(event: cc.Event.EventTouch) {
-        //     let eventID = event.getID();
-        //     if (this.touchEventId != null && eventID == this.touchEventId) {
-        //         this.touchEventId = null
-        //         if (this.isAllowTouch) {
-        //             let location = event.getLocation();
-        //             let ray = cc.Camera.main.getRay(location);
-        //             let results = cc.geomUtils.intersect.raycast(this.cubeRootNode, ray, null, null);
-        //             for (let i = 0; i < results.length; i++) {
-        //                 if (results[0].node.parent.getComponent(Cube)) {
-        //                     results[0].node.parent.getComponent(Cube).clickCube(results[0].node.name);
-        //                 }
-        //                 return;
-        //             }
-        //         }
-        //     }
-        //     this.isAllowTouch = true;
-        // }
     }
     GameLayer.prototype.onLoad = function () {
         ListenerManager_1.ListenerManager.on(EventType_1.EventType.ENTER_GAME, this.handleEnterGame, this);
+        ListenerManager_1.ListenerManager.on(EventType_1.EventType.GAME_RECONNECT, this.handleEnterGame, this);
+        T2M_1.T2M.addSyncEventListener(EventType_1.EventType.DRAG_END, this.handleDragEnd.bind(this));
         // this.node.on(cc.Node.EventType.TOUCH_START, this.onTouchStart, this)
         // this.node.on(cc.Node.EventType.TOUCH_MOVE, this.onTouchMove, this)
         // this.node.on(cc.Node.EventType.TOUCH_END, this.onTouchEnd, this)
     };
     GameLayer.prototype.onDestroy = function () {
         ListenerManager_1.ListenerManager.off(EventType_1.EventType.ENTER_GAME, this.handleEnterGame, this);
+        ListenerManager_1.ListenerManager.off(EventType_1.EventType.GAME_RECONNECT, this.handleEnterGame, this);
+        T2M_1.T2M.removeSyncEventListener(EventType_1.EventType.DRAG_END);
         // this.node.off(cc.Node.EventType.TOUCH_START, this.onTouchStart, this)
         // this.node.off(cc.Node.EventType.TOUCH_MOVE, this.onTouchMove, this)
         // this.node.off(cc.Node.EventType.TOUCH_END, this.onTouchEnd, this)
@@ -117,6 +63,12 @@ var GameLayer = /** @class */ (function (_super) {
     GameLayer.prototype.handleEnterGame = function () {
         this.threeDNode.init();
         this.gameUI.init();
+        var eulerX = SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.eulerX;
+        var eulerY = SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.eulerY;
+        var eulerZ = SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.eulerZ;
+        var rotation = cc.quat();
+        cc.Quat.fromEuler(rotation, eulerX, eulerY, eulerZ);
+        this.cubeRootNode.setRotation(rotation);
     };
     GameLayer.prototype.onDragStart = function (data) {
         this.addMinus.active = false;
@@ -165,19 +117,35 @@ var GameLayer = /** @class */ (function (_super) {
         if (data.isClick && SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.enableClick) {
             var pos = data.target.parent.convertToWorldSpaceAR(cc.v2(data.pos.x, data.pos.y));
             var location = cc.v2(pos.x, pos.y);
-            var ray = cc.Camera.main.getRay(location);
+            var ray = this.threeDCamera.getComponent(cc.Camera).getRay(location);
             var results = cc.geomUtils.intersect.raycast(this.cubeRootNode, ray, null, null);
             for (var i = 0; i < results.length; i++) {
-                if (results[0].node.parent.getComponent(Cube_1.default)) {
+                if (results[0].node.parent.getComponent(Cube_1.default) && results[1]) {
                     results[0].node.parent.getComponent(Cube_1.default).clickCube(results[1].node.name);
                 }
                 return;
             }
         }
+        if (NetWork_1.NetWork.isMaster || !NetWork_1.NetWork.isSync) {
+            var data_1 = {
+                eulerX: SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.eulerX,
+                eulerY: SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.eulerY,
+                eulerZ: SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.eulerZ
+            };
+            T2M_1.T2M.dispatch(EventType_1.EventType.DRAG_END, data_1);
+        }
     };
     GameLayer.prototype.onChangeBigCubeEuler = function (eulerX, eulerY, eulerZ) {
         var rotation = cc.quat();
         cc.Quat.fromEuler(rotation, eulerX, eulerY, eulerZ);
+        SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.eulerX = eulerX;
+        SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.eulerY = eulerY;
+        SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.eulerZ = eulerZ;
+        this.cubeRootNode.setRotation(rotation);
+    };
+    GameLayer.prototype.handleDragEnd = function (data) {
+        var rotation = cc.quat();
+        cc.Quat.fromEuler(rotation, data.eulerX, data.eulerY, data.eulerZ);
         this.cubeRootNode.setRotation(rotation);
     };
     __decorate([

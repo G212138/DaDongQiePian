@@ -24,10 +24,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var ListenerManager_1 = require("../../../../frame/scripts/Manager/ListenerManager");
+var SoundManager_1 = require("../../../../frame/scripts/Manager/SoundManager");
 var SyncDataManager_1 = require("../../../../frame/scripts/Manager/SyncDataManager");
 var EventType_1 = require("../../Data/EventType");
 var Cube_1 = require("./Cube");
 var QiepianPanel_1 = require("./QiepianPanel");
+var SoundConfig_1 = require("./SoundConfig");
 var ThreeDNode_1 = require("./ThreeDNode");
 var _a = cc._decorator, ccclass = _a.ccclass, property = _a.property;
 var GameUI = /** @class */ (function (_super) {
@@ -55,8 +57,17 @@ var GameUI = /** @class */ (function (_super) {
         this.lbl_xCount.string = SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.xCount.toString();
         this.lbl_yCount.string = SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.zCount.toString();
         this.lbl_zCount.string = SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.yCount.toString();
+        this.node.getChildByName("btnEnanleClick").getChildByName('disable').active = SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.cubeOpened;
+        this.node.getChildByName("btnEnanleClick").getChildByName('xuanzhong').active = SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.enableClick;
+        this.node.getChildByName("btnOpen").getChildByName('xuanzhong').active = SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.cubeOpened;
+        this.node.getChildByName("btnBack").getChildByName('disable').active = SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.cubeClickArr.length <= 0;
+        if (SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.cubeOpened) {
+            this.showQiepianPanel();
+        }
     };
     GameUI.prototype.onClickBtnOpen = function () {
+        SoundManager_1.SoundManager.stopSoundByName(SoundConfig_1.SoundConfig.soudlist["点击音效"]);
+        SoundManager_1.SoundManager.playEffect(SoundConfig_1.SoundConfig.soudlist["点击音效"], false, false);
         this.addMinus.active = false;
         this.img_huangbian[0].active = false;
         this.img_huangbian[1].active = false;
@@ -66,22 +77,33 @@ var GameUI = /** @class */ (function (_super) {
             ListenerManager_1.ListenerManager.dispatch(EventType_1.EventType.CUBE_OPEN, true);
             this.showQiepianPanel();
             this.handleClickCube();
+            this.node.getChildByName("btnEnanleClick").getChildByName('disable').active = true;
+            this.node.getChildByName("btnEnanleClick").getChildByName('xuanzhong').active = false;
+            this.node.getChildByName("btnOpen").getChildByName('xuanzhong').active = true;
+            SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.enableClick = false;
         }
         else {
             SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.cubeOpened = false;
             ListenerManager_1.ListenerManager.dispatch(EventType_1.EventType.CUBE_OPEN, false);
             this.qiepianNode.active = false;
+            this.node.getChildByName("btnEnanleClick").getChildByName('disable').active = false;
+            this.node.getChildByName("btnOpen").getChildByName('xuanzhong').active = false;
         }
     };
     GameUI.prototype.onClickReset = function () {
+        SoundManager_1.SoundManager.stopSoundByName(SoundConfig_1.SoundConfig.soudlist["点击音效"]);
+        SoundManager_1.SoundManager.playEffect(SoundConfig_1.SoundConfig.soudlist["点击音效"], false, false);
         SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.cubeOpened = false;
         this.threeDNode.reset();
         this.qiepianNode.active = false;
         SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.cubeClickArr = [];
         SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.qiepianClickArr = [];
         this.node.getChildByName("btnBack").getChildByName('disable').active = true;
+        this.node.getChildByName("btnOpen").getChildByName('xuanzhong').active = false;
     };
     GameUI.prototype.onClickBack = function () {
+        SoundManager_1.SoundManager.stopSoundByName(SoundConfig_1.SoundConfig.soudlist["点击音效"]);
+        SoundManager_1.SoundManager.playEffect(SoundConfig_1.SoundConfig.soudlist["点击音效"], false, false);
         this.addMinus.active = false;
         this.img_huangbian[0].active = false;
         this.img_huangbian[1].active = false;
@@ -100,6 +122,8 @@ var GameUI = /** @class */ (function (_super) {
         }
     };
     GameUI.prototype.onClickEnanleClick = function () {
+        SoundManager_1.SoundManager.stopSoundByName(SoundConfig_1.SoundConfig.soudlist["点击音效"]);
+        SoundManager_1.SoundManager.playEffect(SoundConfig_1.SoundConfig.soudlist["点击音效"], false, false);
         this.addMinus.active = false;
         this.img_huangbian[0].active = false;
         this.img_huangbian[1].active = false;
@@ -112,7 +136,7 @@ var GameUI = /** @class */ (function (_super) {
         for (var i = 0; i < cubeRootNode.childrenCount; i++) {
             cubeRootNode.children[i].getComponent(Cube_1.default).reset();
             for (var j = 0; j < SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.cubeClickArr.length; j++) {
-                cubeRootNode.children[i].getComponent(Cube_1.default).handleCubeClick(SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.cubeClickArr[j]);
+                cubeRootNode.children[i].getComponent(Cube_1.default).handleCubeClick(SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.cubeClickArr[j], false);
             }
         }
         this.node.getChildByName("btnBack").getChildByName('disable').active = SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.cubeClickArr.length <= 0;
@@ -179,6 +203,7 @@ var GameUI = /** @class */ (function (_super) {
         }
         this.threeDNode.reset();
         this.qiepianNode.active = false;
+        this.init();
     };
     GameUI.prototype.onClickMinus = function () {
         if (this.inputType == 0 && SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.xCount > 1) {
@@ -198,6 +223,7 @@ var GameUI = /** @class */ (function (_super) {
         }
         this.threeDNode.reset();
         this.qiepianNode.active = false;
+        this.init();
     };
     GameUI.prototype.handleBtnState = function (count) {
         if (count <= 1) {

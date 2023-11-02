@@ -1,9 +1,11 @@
 
 import { ListenerManager } from "../../../../frame/scripts/Manager/ListenerManager";
+import { SoundManager } from "../../../../frame/scripts/Manager/SoundManager";
 import { SyncDataManager } from "../../../../frame/scripts/Manager/SyncDataManager";
 import { EventType } from "../../Data/EventType";
 import Cube from "./Cube";
 import QiepianPanel from "./QiepianPanel";
+import { SoundConfig } from "./SoundConfig";
 import ThreeNode from "./ThreeDNode";
 
 const { ccclass, property } = cc._decorator;
@@ -40,9 +42,19 @@ export default class GameUI extends cc.Component {
         this.lbl_xCount.string = SyncDataManager.getSyncData().customSyncData.xCount.toString();
         this.lbl_yCount.string = SyncDataManager.getSyncData().customSyncData.zCount.toString();
         this.lbl_zCount.string = SyncDataManager.getSyncData().customSyncData.yCount.toString();
+
+        this.node.getChildByName("btnEnanleClick").getChildByName('disable').active = SyncDataManager.getSyncData().customSyncData.cubeOpened;
+        this.node.getChildByName("btnEnanleClick").getChildByName('xuanzhong').active = SyncDataManager.getSyncData().customSyncData.enableClick;
+        this.node.getChildByName("btnOpen").getChildByName('xuanzhong').active = SyncDataManager.getSyncData().customSyncData.cubeOpened;
+        this.node.getChildByName("btnBack").getChildByName('disable').active = SyncDataManager.getSyncData().customSyncData.cubeClickArr.length <= 0;
+        if (SyncDataManager.getSyncData().customSyncData.cubeOpened) {
+            this.showQiepianPanel();
+        }
     }
 
     private onClickBtnOpen() {
+        SoundManager.stopSoundByName(SoundConfig.soudlist["点击音效"]);
+        SoundManager.playEffect(SoundConfig.soudlist["点击音效"], false, false);
         this.addMinus.active = false;
         this.img_huangbian[0].active = false;
         this.img_huangbian[1].active = false;
@@ -52,23 +64,34 @@ export default class GameUI extends cc.Component {
             ListenerManager.dispatch(EventType.CUBE_OPEN, true);
             this.showQiepianPanel();
             this.handleClickCube();
+            this.node.getChildByName("btnEnanleClick").getChildByName('disable').active = true;
+            this.node.getChildByName("btnEnanleClick").getChildByName('xuanzhong').active = false;
+            this.node.getChildByName("btnOpen").getChildByName('xuanzhong').active = true;
+            SyncDataManager.getSyncData().customSyncData.enableClick = false;
         } else {
             SyncDataManager.getSyncData().customSyncData.cubeOpened = false;
             ListenerManager.dispatch(EventType.CUBE_OPEN, false);
             this.qiepianNode.active = false;
+            this.node.getChildByName("btnEnanleClick").getChildByName('disable').active = false;
+            this.node.getChildByName("btnOpen").getChildByName('xuanzhong').active = false;
         }
     }
 
     private onClickReset() {
+        SoundManager.stopSoundByName(SoundConfig.soudlist["点击音效"]);
+        SoundManager.playEffect(SoundConfig.soudlist["点击音效"], false, false);
         SyncDataManager.getSyncData().customSyncData.cubeOpened = false;
         this.threeDNode.reset();
         this.qiepianNode.active = false;
         SyncDataManager.getSyncData().customSyncData.cubeClickArr = [];
         SyncDataManager.getSyncData().customSyncData.qiepianClickArr = [];
         this.node.getChildByName("btnBack").getChildByName('disable').active = true;
+        this.node.getChildByName("btnOpen").getChildByName('xuanzhong').active = false;
     }
 
     private onClickBack() {
+        SoundManager.stopSoundByName(SoundConfig.soudlist["点击音效"]);
+        SoundManager.playEffect(SoundConfig.soudlist["点击音效"], false, false);
         this.addMinus.active = false;
         this.img_huangbian[0].active = false;
         this.img_huangbian[1].active = false;
@@ -88,6 +111,8 @@ export default class GameUI extends cc.Component {
     }
 
     private onClickEnanleClick() {
+        SoundManager.stopSoundByName(SoundConfig.soudlist["点击音效"]);
+        SoundManager.playEffect(SoundConfig.soudlist["点击音效"], false, false);
         this.addMinus.active = false;
         this.img_huangbian[0].active = false;
         this.img_huangbian[1].active = false;
@@ -101,7 +126,7 @@ export default class GameUI extends cc.Component {
         for (let i = 0; i < cubeRootNode.childrenCount; i++) {
             cubeRootNode.children[i].getComponent(Cube).reset();
             for (let j = 0; j < SyncDataManager.getSyncData().customSyncData.cubeClickArr.length; j++) {
-                cubeRootNode.children[i].getComponent(Cube).handleCubeClick(SyncDataManager.getSyncData().customSyncData.cubeClickArr[j]);
+                cubeRootNode.children[i].getComponent(Cube).handleCubeClick(SyncDataManager.getSyncData().customSyncData.cubeClickArr[j], false);
             }
         }
         this.node.getChildByName("btnBack").getChildByName('disable').active = SyncDataManager.getSyncData().customSyncData.cubeClickArr.length <= 0;
@@ -166,13 +191,14 @@ export default class GameUI extends cc.Component {
             SyncDataManager.getSyncData().customSyncData.zCount++;
             this.lbl_yCount.string = SyncDataManager.getSyncData().customSyncData.zCount.toString();
             this.handleBtnState(SyncDataManager.getSyncData().customSyncData.zCount);
-        } else if (this.inputType == 2 && SyncDataManager.getSyncData().customSyncData.yCount < 6){
+        } else if (this.inputType == 2 && SyncDataManager.getSyncData().customSyncData.yCount < 6) {
             SyncDataManager.getSyncData().customSyncData.yCount++;
             this.lbl_zCount.string = SyncDataManager.getSyncData().customSyncData.yCount.toString();
             this.handleBtnState(SyncDataManager.getSyncData().customSyncData.yCount);
         }
         this.threeDNode.reset();
-        this.qiepianNode.active = false;        
+        this.qiepianNode.active = false;
+        this.init();
     }
 
     private onClickMinus() {
@@ -191,9 +217,10 @@ export default class GameUI extends cc.Component {
         }
         this.threeDNode.reset();
         this.qiepianNode.active = false;
+        this.init();
     }
 
-    private handleBtnState(count:number){
+    private handleBtnState(count: number) {
         if (count <= 1) {
             this.addMinus.getChildByName("btnMinusSize").getChildByName("Label").color = new cc.Color().fromHEX("#74BBF2");
         } else {

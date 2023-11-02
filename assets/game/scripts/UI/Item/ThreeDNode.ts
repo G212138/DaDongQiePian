@@ -26,10 +26,16 @@ export default class ThreeNode extends cc.Component {
 
     public init() {
         this.initBigCube();
+        this.onCubeOpen(SyncDataManager.getSyncData().customSyncData.cubeOpened);
+        for (let i = 0; i < SyncDataManager.getSyncData().customSyncData.cubeClickArr.length; i++) {
+            this.onClickCube(SyncDataManager.getSyncData().customSyncData.cubeClickArr[i]);
+        }
     }
 
     public reset() {
-        this.cubeRootNode.setRotation(cc.quat());
+        let quat = new cc.Quat()
+        cc.Quat.fromEuler(quat, 0, 45, 0)
+        this.cubeRootNode.setRotation(quat);
         this.initBigCube();
         SyncDataManager.getSyncData().customSyncData.cubeClickArr = [];
         SyncDataManager.getSyncData().customSyncData.cubeOpened = false;

@@ -58,6 +58,7 @@ var GamePanel = /** @class */ (function (_super) {
      */
     GamePanel.prototype.onRecoveryData = function (recovery) {
         _super.prototype.onRecoveryData.call(this, recovery);
+        ListenerManager_1.ListenerManager.dispatch(EventType_1.EventType.GAME_RECONNECT);
     };
     /**
      * 作答正确

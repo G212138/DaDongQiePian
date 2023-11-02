@@ -41,6 +41,7 @@ export default class GamePanel extends BaseGamePanel {
      */
     protected onRecoveryData(recovery: SyncData): void {
         super.onRecoveryData(recovery);
+        ListenerManager.dispatch(EventType.GAME_RECONNECT);
     }
 
     /**

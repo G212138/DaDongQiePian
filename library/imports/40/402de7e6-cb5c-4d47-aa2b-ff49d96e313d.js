@@ -24,8 +24,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var ListenerManager_1 = require("../../../../frame/scripts/Manager/ListenerManager");
+var SoundManager_1 = require("../../../../frame/scripts/Manager/SoundManager");
 var SyncDataManager_1 = require("../../../../frame/scripts/Manager/SyncDataManager");
 var EventType_1 = require("../../Data/EventType");
+var SoundConfig_1 = require("./SoundConfig");
 var _a = cc._decorator, ccclass = _a.ccclass, property = _a.property;
 var Cube = /** @class */ (function (_super) {
     __extends(Cube, _super);
@@ -94,16 +96,29 @@ var Cube = /** @class */ (function (_super) {
         SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.cubeClickArr.push(data);
         ListenerManager_1.ListenerManager.dispatch(EventType_1.EventType.CLICK_CUBE, data);
     };
-    Cube.prototype.handleCubeClick = function (data) {
+    Cube.prototype.handleCubeClick = function (data, isClick) {
+        if (isClick === void 0) { isClick = true; }
         if (data.xIndex == null && data.yIndex == this.yIndex && data.zIndex == this.zIndex) {
+            if (isClick) {
+                SoundManager_1.SoundManager.stopSoundByName(SoundConfig_1.SoundConfig.soudlist["打孔音效"]);
+                SoundManager_1.SoundManager.playEffect(SoundConfig_1.SoundConfig.soudlist["打孔音效"], false, false);
+            }
             this.isHide = true;
             this.node.active = false;
         }
         else if (data.yIndex == null && data.xIndex == this.xIndex && data.zIndex == this.zIndex) {
+            if (isClick) {
+                SoundManager_1.SoundManager.stopSoundByName(SoundConfig_1.SoundConfig.soudlist["打孔音效"]);
+                SoundManager_1.SoundManager.playEffect(SoundConfig_1.SoundConfig.soudlist["打孔音效"], false, false);
+            }
             this.isHide = true;
             this.node.active = false;
         }
         else if (data.zIndex == null && data.xIndex == this.xIndex && data.yIndex == this.yIndex) {
+            if (isClick) {
+                SoundManager_1.SoundManager.stopSoundByName(SoundConfig_1.SoundConfig.soudlist["打孔音效"]);
+                SoundManager_1.SoundManager.playEffect(SoundConfig_1.SoundConfig.soudlist["打孔音效"], false, false);
+            }
             this.isHide = true;
             this.node.active = false;
         }

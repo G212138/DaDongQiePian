@@ -23,7 +23,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var SoundManager_1 = require("../../../../frame/scripts/Manager/SoundManager");
 var SyncDataManager_1 = require("../../../../frame/scripts/Manager/SyncDataManager");
+var SoundConfig_1 = require("./SoundConfig");
 var _a = cc._decorator, ccclass = _a.ccclass, property = _a.property;
 var Block = /** @class */ (function (_super) {
     __extends(Block, _super);
@@ -40,6 +42,9 @@ var Block = /** @class */ (function (_super) {
         this._xIndex = xIndex;
         this._yIndex = zIndex;
         this._zIndex = yIndex;
+        var index = SyncDataManager_1.SyncDataManager.getSyncData().customSyncData.qiepianClickArr.indexOf(this.node.name);
+        this.isClicked = index != -1;
+        this.node.getChildByName("icon").active = this.isClicked;
     };
     Block.prototype.onHandleClickCube = function (data) {
         // if (data.xIndex == null && data.yIndex == this._yIndex && data.zIndex == this._zIndex) {
@@ -54,6 +59,8 @@ var Block = /** @class */ (function (_super) {
         // this.node.getChildByName("icon").active = false;
     };
     Block.prototype.onClickBlock = function () {
+        SoundManager_1.SoundManager.stopSoundByName(SoundConfig_1.SoundConfig.soudlist["点击音效"]);
+        SoundManager_1.SoundManager.playEffect(SoundConfig_1.SoundConfig.soudlist["点击音效"], false, false);
         this.isClicked = !this.isClicked;
         this.node.getChildByName("icon").active = this.isClicked;
         if (this.isClicked) {

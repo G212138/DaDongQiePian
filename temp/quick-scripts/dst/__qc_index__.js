@@ -60,6 +60,7 @@ require('./assets/game/scripts/UI/Item/Block');
 require('./assets/game/scripts/UI/Item/Cube');
 require('./assets/game/scripts/UI/Item/GameUI');
 require('./assets/game/scripts/UI/Item/QiepianPanel');
+require('./assets/game/scripts/UI/Item/SoundConfig');
 require('./assets/game/scripts/UI/Item/ThreeDNode');
 require('./assets/game/scripts/UI/Layer/GameLayer');
 require('./assets/game/scripts/UI/panel/GamePanel');

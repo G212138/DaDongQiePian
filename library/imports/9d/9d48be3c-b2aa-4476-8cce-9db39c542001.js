@@ -13,8 +13,10 @@ var EventType;
     // examp
     EventType["ON_BUTTON_CLICKED"] = "ON_BUTTON_CLICKED";
     EventType["ENTER_GAME"] = "ENTER_GAME";
+    EventType["GAME_RECONNECT"] = "GAME_RECONNECT";
     EventType["CUBE_OPEN"] = "CUBE_OPEN";
     EventType["CLICK_CUBE"] = "CLICK_CUBE";
+    EventType["DRAG_END"] = "DRAG_END";
 })(EventType = exports.EventType || (exports.EventType = {}));
 
 cc._RF.pop();

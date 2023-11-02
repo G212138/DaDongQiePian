@@ -44,7 +44,7 @@
             "children": [
               {
                 "width": 1178.984375,
-                "height": 629.28125,
+                "height": 628.28125,
                 "type": "panel",
                 "active": 0,
                 "children": [
@@ -53,7 +53,7 @@
               },
               {
                 "width": 1178.984375,
-                "height": 287.21875,
+                "height": 288.21875,
                 "type": "panel",
                 "active": 0,
                 "children": [
@@ -88,7 +88,8 @@
         "inspector",
         "cocos-services"
       ]
-    }
+    },
+    " load-media-worker": {}
   },
   "panels": {
     "builder": {

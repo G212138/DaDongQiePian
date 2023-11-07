@@ -93,8 +93,9 @@ var DragSync = /** @class */ (function (_super) {
             return;
         var pos = this.rootNode.convertToNodeSpaceAR(event.getLocation());
         var prevLocation = this.rootNode.convertToNodeSpaceAR(event.getPreviousLocation());
+        var delta = this.rootNode.convertToNodeSpaceAR(event.getDelta());
         var type = 'touchMove' + this.tagId;
-        var data = { pos: { x: pos.x, y: pos.y }, prevLocation: { x: prevLocation.x, y: prevLocation.y } };
+        var data = { pos: { x: pos.x, y: pos.y }, prevLocation: { x: prevLocation.x, y: prevLocation.y }, delta: { x: delta.x, y: delta.y } };
         T2M_1.T2M.dispatch(type, data, true);
     };
     DragSync.prototype.touchEnd = function (event) {
@@ -142,7 +143,7 @@ var DragSync = /** @class */ (function (_super) {
             this.node.position = cc.v3(data.pos.x, data.pos.y);
             for (var _i = 0, _a = this.touchMovingEvents; _i < _a.length; _i++) {
                 var eventHandler = _a[_i];
-                eventHandler.emit([{ pos: data.pos, target: this.node, prevLocation: data.prevLocation }]);
+                eventHandler.emit([{ pos: data.pos, target: this.node, prevLocation: data.prevLocation, delta: data.delta }]);
             }
         }
     };

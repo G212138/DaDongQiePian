@@ -80,22 +80,42 @@ export default class GameLayer extends cc.Component {
         let eulerZ = this.cubeRootNode.eulerAngles.z;
         let quat = new cc.Quat()
         cc.Quat.fromEuler(quat, eulerX, eulerY, eulerZ)
-        let changed = false
-        if (Math.abs(disX) > 0.1) {
-            let angle = (disX / 2436 * 180);
+        let changed = false;
+        let dot = vel.normalize().dot(cc.Vec2.RIGHT);
+        let rotateByUp = Math.abs(dot) > Math.cos(cc.misc.degreesToRadians(45));
+        if ( rotateByUp) {
+            let angle = (disX / 2436 * 360);
+            // eulerY += angle
             cc.Quat.rotateAround(quat, quat, cc.Vec3.UP, cc.misc.degreesToRadians(angle))
             changed = true
         }
-        if (Math.abs(disY) > 0.1) {
-            let angle = -(disY / 2436 * 180);
+        if ( !rotateByUp) {
+            let angle = -(disY / 2436 * 720);
+            // eulerX += angle
             cc.Quat.rotateAround(quat, quat, this.threeDCamera.right, cc.misc.degreesToRadians(angle))
             changed = true
         }
+
         if (changed) {
             let outEuler = cc.v3()
             quat.toEuler(outEuler)
             this.onChangeBigCubeEuler(outEuler.x, outEuler.y, outEuler.z)
         }
+
+
+
+
+        // let dif = data.target.parent.convertToWorldSpaceAR(cc.v2(data.delta.x, data.delta.y));
+        // let q_tmp = new cc.Quat();
+        // let v_tmp = cc.v3(-dif.y, dif.x, 0);
+        // v_tmp.normalizeSelf();
+        // let eulerX = this.cubeRootNode.eulerAngles.x;
+        // let eulerY = this.cubeRootNode.eulerAngles.y;
+        // let eulerZ = this.cubeRootNode.eulerAngles.z;
+        // let quat = new cc.Quat()
+        // cc.Quat.fromEuler(quat, eulerX, eulerY, eulerZ)
+        // let out_Q = cc.Quat.rotateAround(q_tmp, quat, v_tmp, Math.PI * 0.007);
+        // this.cubeRootNode.setRotation(out_Q.x, out_Q.y, out_Q.z, out_Q.w);
     }
 
     private onDragEnd(data) {
@@ -142,5 +162,12 @@ export default class GameLayer extends cc.Component {
         let rotation = cc.quat();
         cc.Quat.fromEuler(rotation, data.eulerX, data.eulerY, data.eulerZ);
         this.cubeRootNode.setRotation(rotation);
+        //将this.cubeRootNode的轴重置为世界坐标系的轴
+        // let euler = this.cubeRootNode.eulerAngles;
+        // let quat = new cc.Quat()
+        // cc.Quat.fromEuler(quat, euler.x, euler.y, euler.z)
+        // let outEuler = cc.v3()
+        // quat.toEuler(outEuler)
+        // this.onChangeBigCubeEuler(outEuler.x, outEuler.y, outEuler.z)
     }
 }

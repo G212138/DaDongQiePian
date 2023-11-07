@@ -71,8 +71,9 @@ export default class DragSync extends cc.Component {
         if (!this.isEnable || !this.isTouching) return;
         let pos = this.rootNode.convertToNodeSpaceAR(event.getLocation());
         let prevLocation = this.rootNode.convertToNodeSpaceAR(event.getPreviousLocation());
+        let delta = this.rootNode.convertToNodeSpaceAR(event.getDelta());
         let type = 'touchMove' + this.tagId;
-        let data = { pos: { x: pos.x, y: pos.y }, prevLocation: { x: prevLocation.x, y: prevLocation.y } };
+        let data = { pos: { x: pos.x, y: pos.y }, prevLocation: { x: prevLocation.x, y: prevLocation.y },delta: { x: delta.x, y: delta.y } };
         T2M.dispatch(type, data, true);
     }
 
@@ -127,7 +128,7 @@ export default class DragSync extends cc.Component {
         } else {
             this.node.position = cc.v3(data.pos.x, data.pos.y);
             for (let eventHandler of this.touchMovingEvents) {
-                eventHandler.emit([{ pos: data.pos, target: this.node, prevLocation: data.prevLocation }]);
+                eventHandler.emit([{ pos: data.pos, target: this.node, prevLocation: data.prevLocation ,delta: data.delta}]);
             }
         }
     }

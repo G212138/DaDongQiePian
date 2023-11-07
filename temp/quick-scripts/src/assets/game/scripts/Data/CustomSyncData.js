@@ -21,7 +21,7 @@ var CustomSyncData = /** @class */ (function () {
         this.enableClick = false; // 是否允许点击
         this.qiepianClickArr = []; // 切片点击的方块数组
         this.eulerX = 0;
-        this.eulerY = 45;
+        this.eulerY = 0;
         this.eulerZ = 0;
     }
     return CustomSyncData;

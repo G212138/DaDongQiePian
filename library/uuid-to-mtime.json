@@ -1824,89 +1824,89 @@
     "meta": 1699014141364,
     "relativePath": "game\\scripts\\Components\\DragSync.ts"
   },
-  "7af0210f-3ff0-4eb3-98c1-d45f3e67d904": {
-    "asset": 1699326397814,
-    "meta": 1699326423990,
-    "relativePath": "game\\scripts\\UI\\Layer\\GameLayer.ts"
-  },
-  "f6665ca6-d089-4935-82aa-e1d6bf4c79b0": {
-    "asset": 1699326553402,
-    "meta": 1699326600182,
-    "relativePath": "game\\scripts\\Data\\CustomSyncData.ts"
-  },
   "32f855fb-ac45-4a70-9924-652cc84cf88d": {
-    "asset": 1699326607093,
-    "meta": 1699326607107,
+    "asset": 1699339103814,
+    "meta": 1699339103826,
     "relativePath": "resources\\prefab\\ui\\panel\\GamePanel.prefab"
-  },
-  "9cd01690-35b1-4c51-8e2c-50c374c981f9": {
-    "asset": 1699326694678,
-    "meta": 1699326701104,
-    "relativePath": "frame\\scripts\\Http\\NetWork.ts"
-  },
-  "20a8023e-0c04-4770-afea-4d098b28ff61": {
-    "asset": 1641891892000,
-    "meta": 1699326747114,
-    "relativePath": "frame\\frameRes\\audios\\sfx_error.mp3"
-  },
-  "9c012f90-bda9-43e1-9fdc-87d5778aa758": {
-    "asset": 1641891892000,
-    "meta": 1699326747167,
-    "relativePath": "frame\\frameRes\\audios\\over_yingyu.mp3"
-  },
-  "348a19ff-6bb6-4dbf-9f1d-4655840def38": {
-    "asset": 1641891892000,
-    "meta": 1699326747211,
-    "relativePath": "frame\\frameRes\\audios\\sfx_buttn.mp3"
-  },
-  "ce8d967c-261c-4956-8486-0eafbd569ea9": {
-    "asset": 1641891892000,
-    "meta": 1699326747252,
-    "relativePath": "frame\\frameRes\\audios\\over_yuwen.mp3"
-  },
-  "828feb16-3a4f-4d01-a9ae-21cbbd3b1f02": {
-    "asset": 1641891892000,
-    "meta": 1699326747295,
-    "relativePath": "frame\\frameRes\\audios\\sfx_genpos.mp3"
-  },
-  "28007fb8-08d2-4604-adef-e5e3e0bb9211": {
-    "asset": 1698891905288,
-    "meta": 1699326747336,
-    "relativePath": "resources\\audios\\点击音效.mp3"
-  },
-  "2f802513-3487-442b-98eb-aebdd2c80484": {
-    "asset": 1641891892000,
-    "meta": 1699326747369,
-    "relativePath": "frame\\frameRes\\audios\\sfx_genneg.mp3"
-  },
-  "e4753727-e265-4441-b07b-4306643ceccb": {
-    "asset": 1641891892000,
-    "meta": 1699326747398,
-    "relativePath": "frame\\frameRes\\audios\\sfx_geupgrd.mp3"
-  },
-  "544d1d05-a122-46da-84b2-80c3b59fbfc0": {
-    "asset": 1698893183917,
-    "meta": 1699326747431,
-    "relativePath": "resources\\audios\\打孔音效.mp3"
-  },
-  "b0e3d974-5a3c-47a0-91b9-71f6cfe71638": {
-    "asset": 1641891892000,
-    "meta": 1699326747461,
-    "relativePath": "frame\\frameRes\\audios\\star_good.mp3"
-  },
-  "6acb4070-49ae-4f85-a51e-cdcc5b8276bc": {
-    "asset": 1641891892000,
-    "meta": 1699326747488,
-    "relativePath": "frame\\frameRes\\audios\\star_perfect.mp3"
-  },
-  "02f401c1-6230-4bb3-9fac-e92a262f064a": {
-    "asset": 1641891892000,
-    "meta": 1699326747512,
-    "relativePath": "frame\\frameRes\\audios\\star_great.mp3"
   },
   "62af3dd2-526f-4df6-81ef-c3b28cf4a879": {
     "asset": 1697941060396,
     "meta": 1699326787158,
     "relativePath": "resources\\prefab\\ui\\panel\\TeacherPanel.prefab"
+  },
+  "7af0210f-3ff0-4eb3-98c1-d45f3e67d904": {
+    "asset": 1699338247646,
+    "meta": 1699338249770,
+    "relativePath": "game\\scripts\\UI\\Layer\\GameLayer.ts"
+  },
+  "f6665ca6-d089-4935-82aa-e1d6bf4c79b0": {
+    "asset": 1699338276301,
+    "meta": 1699338278478,
+    "relativePath": "game\\scripts\\Data\\CustomSyncData.ts"
+  },
+  "9c012f90-bda9-43e1-9fdc-87d5778aa758": {
+    "asset": 1641891892000,
+    "meta": 1699339349739,
+    "relativePath": "frame\\frameRes\\audios\\over_yingyu.mp3"
+  },
+  "ce8d967c-261c-4956-8486-0eafbd569ea9": {
+    "asset": 1641891892000,
+    "meta": 1699339349784,
+    "relativePath": "frame\\frameRes\\audios\\over_yuwen.mp3"
+  },
+  "828feb16-3a4f-4d01-a9ae-21cbbd3b1f02": {
+    "asset": 1641891892000,
+    "meta": 1699339349810,
+    "relativePath": "frame\\frameRes\\audios\\sfx_genpos.mp3"
+  },
+  "348a19ff-6bb6-4dbf-9f1d-4655840def38": {
+    "asset": 1641891892000,
+    "meta": 1699339349841,
+    "relativePath": "frame\\frameRes\\audios\\sfx_buttn.mp3"
+  },
+  "20a8023e-0c04-4770-afea-4d098b28ff61": {
+    "asset": 1641891892000,
+    "meta": 1699339349865,
+    "relativePath": "frame\\frameRes\\audios\\sfx_error.mp3"
+  },
+  "2f802513-3487-442b-98eb-aebdd2c80484": {
+    "asset": 1641891892000,
+    "meta": 1699339349893,
+    "relativePath": "frame\\frameRes\\audios\\sfx_genneg.mp3"
+  },
+  "e4753727-e265-4441-b07b-4306643ceccb": {
+    "asset": 1641891892000,
+    "meta": 1699339349919,
+    "relativePath": "frame\\frameRes\\audios\\sfx_geupgrd.mp3"
+  },
+  "b0e3d974-5a3c-47a0-91b9-71f6cfe71638": {
+    "asset": 1641891892000,
+    "meta": 1699339349940,
+    "relativePath": "frame\\frameRes\\audios\\star_good.mp3"
+  },
+  "02f401c1-6230-4bb3-9fac-e92a262f064a": {
+    "asset": 1641891892000,
+    "meta": 1699339349967,
+    "relativePath": "frame\\frameRes\\audios\\star_great.mp3"
+  },
+  "6acb4070-49ae-4f85-a51e-cdcc5b8276bc": {
+    "asset": 1641891892000,
+    "meta": 1699339349988,
+    "relativePath": "frame\\frameRes\\audios\\star_perfect.mp3"
+  },
+  "544d1d05-a122-46da-84b2-80c3b59fbfc0": {
+    "asset": 1698893183917,
+    "meta": 1699339350011,
+    "relativePath": "resources\\audios\\打孔音效.mp3"
+  },
+  "28007fb8-08d2-4604-adef-e5e3e0bb9211": {
+    "asset": 1698891905288,
+    "meta": 1699339350031,
+    "relativePath": "resources\\audios\\点击音效.mp3"
+  },
+  "9cd01690-35b1-4c51-8e2c-50c374c981f9": {
+    "asset": 1699339554181,
+    "meta": 1699339560021,
+    "relativePath": "frame\\scripts\\Http\\NetWork.ts"
   }
 }

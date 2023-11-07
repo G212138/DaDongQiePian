@@ -16,7 +16,7 @@ export class CustomSyncData {
     public enableClick: boolean = false; // 是否允许点击
     public qiepianClickArr: string[] = []; // 切片点击的方块数组
     public eulerX:number = 0;
-    public eulerY:number = 45;
+    public eulerY:number = 0;
     public eulerZ:number = 0;
     
 }
